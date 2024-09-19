@@ -3,6 +3,7 @@ use std::{
     fs,
     io::{prelude::*, BufReader},
     net::{TcpListener, TcpStream},
+    sync::{Arc, Mutex},
     thread,
     time::Duration,
 };
@@ -18,6 +19,23 @@ fn main() {
             handle_connection(stream);
         });
     }
+}
+
+struct Message {
+    id: usize,
+    content: String,
+    author: Person,
+}
+
+struct Person {
+    id: usize,
+    name: String,
+}
+
+struct Room {
+    id: usize,
+    messages: Arc<Mutex<Vec<Message>>>,
+    people: Vec<Person>,
 }
 
 fn handle_connection(mut stream: TcpStream) {
